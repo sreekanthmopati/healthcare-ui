@@ -49,7 +49,7 @@ const Login = () => {
       ) : (
         <div className="bg-white p-8 rounded-lg shadow-lg w-96">
           <h2 className="text-2xl font-semibold text-center text-blue-700">
-            Healthcare Login
+            MedIntel Pro Login
           </h2>
           <form onSubmit={handleLogin} className="mt-4">
             <div>

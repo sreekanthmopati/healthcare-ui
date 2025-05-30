@@ -932,6 +932,7 @@ const PatientForm = () => {
         PatientRegistrationDate: today,
         Ptype: formData.patientType,
         DOB: dob,
+        Sponsor : "MEDICARE",
         BloodGroup: formData.bloodGroup || null,
         Status: "True"
       };

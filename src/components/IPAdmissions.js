@@ -1339,7 +1339,17 @@ const IPAdmissions = () => {
                     </td>
                     <td className="p-3 text-sm text-gray-600">{calculateLOS(admission.admission_date)} days</td>
                     <td className="p-3 text-sm text-gray-600">CORPORATE</td>
-                    <td className="p-3 text-sm font-semibold text-orange-600">SPECIMEN</td>
+                    <td
+  className={`p-3 text-sm font-semibold ${
+    admission.patient.Sponsor?.trim().toLowerCase() === 'specimen'
+      ? 'text-orange-600'
+      : admission.patient.Sponsor?.trim().toLowerCase() === 'medicare'
+      ? 'text-blue-600'
+      : 'text-gray-600'
+  }`}
+>
+  {admission.patient.Sponsor}
+</td>
 
                     <td className="p-3 text-sm text-gray-600">{admission.diagnosis.Departments.DepartmentName}</td>
                     <td className="p-3 text-sm text-gray-600">

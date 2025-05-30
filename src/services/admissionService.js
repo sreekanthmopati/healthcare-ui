@@ -96,6 +96,38 @@ export const getAvailableBedsCount = async (wardId) => {
 
 
 
+
+
+
+
+  // ✅ 1. Discharge single admission
+export const dischargeAdmission = async (admissionId, dischargeReasonId) => {
+    try {
+      const response = await api.put(`/adms/discharge/${admissionId}`, {
+        dischargeReasonId,
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error discharging admission:", error);
+      throw error;
+    }
+  };
+  
+  // ✅ 2. Bulk discharge
+  export const dischargeAdmissionsBulk = async (admissionIds) => {
+    try {
+      const response = await api.put("/adms/discharge/bulk", {
+        admissionIds,
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error in bulk discharge:", error);
+      throw error;
+    }
+  };
+
+
+
  
   
 

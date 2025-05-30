@@ -730,6 +730,8 @@ import { getDepartments, getDiagnosesForDepartment } from '../services/departmen
 import { getTodaysPatientsByDepartment } from '../services/patientService';
 import { getAllWards } from '../services/wardService';
 import { createBulkAdmissions, getAvailableBedsCount } from '../services/admissionService';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const BulkAdmission = () => {
   // ... (keep all the state declarations and hooks the same as before)
@@ -749,46 +751,46 @@ const BulkAdmission = () => {
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      
+      const [depts, wardsData, patientsCount] = await Promise.all([
+        getDepartments(),
+        getAllWards(),
+        getTodaysPatientsByDepartment()
+      ]);
+
+      setDepartments(depts);
+      setWards(wardsData);
+      setRegisteredCounts(patientsCount);
+
+      const initialSelections = [];
+      const diagMap = {};
+
+      for (const dept of depts) {
+        initialSelections.push({
+          departmentId: dept.DepartmentID,
+          count: '',
+          diagnosisId: '',
+          wardId: ''
+        });
+
+        const diagnoses = await getDiagnosesForDepartment(dept.DepartmentID);
+        diagMap[dept.DepartmentID] = diagnoses;
+      }
+
+      setDepartmentSelections(initialSelections);
+      setDiagnosesMap(diagMap);
+    } catch (error) {
+      console.error('Error initializing data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        
-        const [depts, wardsData, patientsCount] = await Promise.all([
-          getDepartments(),
-          getAllWards(),
-          getTodaysPatientsByDepartment()
-        ]);
-
-        setDepartments(depts);
-        setWards(wardsData);
-        setRegisteredCounts(patientsCount);
-
-        const initialSelections = [];
-        const diagMap = {};
-
-        for (const dept of depts) {
-          initialSelections.push({
-            departmentId: dept.DepartmentID,
-            count: '',
-            diagnosisId: '',
-            wardId: ''
-          });
-
-          const diagnoses = await getDiagnosesForDepartment(dept.DepartmentID);
-          diagMap[dept.DepartmentID] = diagnoses;
-        }
-
-        setDepartmentSelections(initialSelections);
-        setDiagnosesMap(diagMap);
-      } catch (error) {
-        console.error('Error initializing data:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
+   
     fetchData();
   }, []);
 
@@ -948,12 +950,28 @@ const BulkAdmission = () => {
 
       const result = await createBulkAdmissions(bulkData);
       
-      alert(`Bulk admission successful: ${result.totalSuccess} patients admitted`);
+      toast.success(`✅ Bulk admission successful: ${result.totalSuccess} patients admitted`);
       setShowPreview(false);
       // Refresh data or reset form as needed
+      setSubmittedData([]);
+      
+      // Reset department selections to initial state
+      const resetSelections = departmentSelections.map(item => ({
+        ...item,
+        count: '',
+        diagnosisId: '',
+        wardId: ''
+      }));
+      setDepartmentSelections(resetSelections);
+      
+      // Clear any errors
+      setErrors({});
+      
+      // Optionally: Refresh data from server
+      fetchData(); // You'll need to extract the fetch logic to a reusable function
     } catch (error) {
       console.error('Error during bulk admission:', error);
-      alert(`Error during bulk admission: ${error.response?.data?.message || error.message}`);
+      toast.error(`❌ Error during bulk admission: ${error.response?.data?.message || error.message}`);
     } finally {
       setIsSubmitting(false);
     }
@@ -973,6 +991,7 @@ const BulkAdmission = () => {
 
   return (
     <div className="container mx-auto p-4">
+        <ToastContainer position="top-right" autoClose={4000} hideProgressBar />
       <h1 className="text-3xl font-bold mb-6 text-teal-800">🏥 Convert IP'S</h1>
 
       <form onSubmit={handleSubmit} className="bg-white p-6 rounded-xl shadow-lg">
@@ -1050,9 +1069,12 @@ const BulkAdmission = () => {
                         >
                           <option value="">Select</option>
                           {wards.map(ward => (
+                            // <option key={ward.ward_id} value={ward.ward_id}>
+                            //   {ward.ward_name} ({ward.ward_type}) - {wardBedAvailability[ward.ward_id] || 0} available
+                            // </option>
                             <option key={ward.ward_id} value={ward.ward_id}>
-                              {ward.ward_name} ({ward.ward_type}) - {wardBedAvailability[ward.ward_id] || 0} available
-                            </option>
+                            {ward.ward_name} ({ward.ward_type}) 
+                          </option>
                           ))}
                         </select>
                       ) : <span className="text-gray-400">-</span>}

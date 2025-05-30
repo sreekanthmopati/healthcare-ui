@@ -285,6 +285,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import { FaClipboardList, FaCalendarCheck, FaMoneyBill, FaBed, FaUser } from "react-icons/fa";
 import { getDashboardData, fetchDepartmentCounts } from "../services/dashboardService";
 import { getAllBeds } from "../services/wardService";
+import { getAllAdmissions } from "../services/admissionService";
+import { getPatients } from "../services/patientService";
 import PatientForm from "../components/PatientForm";
 import Sidebar from '../components/Sidebar';
 import '../index.css';
@@ -295,6 +297,8 @@ const Dashboard = () => {
   const [data, setData] = useState({ totalPatients: 0, totalDoctors: 0, totalAppointments: 0 });
   const [departmentCounts, setDepartmentCounts] = useState([]);
   const [onBedCount, setOnBedCount] = useState(0);
+  const [dischargesCount, setdischargesCount] = useState(0);
+  const [umrCount, setUmrCount] = useState(0);
 
 
   // Fetch dashboard data
@@ -323,6 +327,28 @@ const Dashboard = () => {
   
     fetchBedData();
   }, []);
+
+  useEffect(() => {
+    const fetchDischargeCount = async () => {
+      try {
+        const admissions = await getAllAdmissions();
+        
+        const discharged = admissions.filter(
+          admission =>
+            admission.is_discharged === true &&
+            admission.discharge_date !== null &&
+            admission.dischargeReasonId !== null
+        );
+  
+        setdischargesCount(discharged.length);
+      } catch (error) {
+        console.error("Error fetching admission data:", error);
+      }
+    };
+  
+    fetchDischargeCount();
+  }, []);
+  
   
 
   // Fetch department counts
@@ -367,6 +393,18 @@ const Dashboard = () => {
     };
     getCounts();
   }, []);
+
+  useEffect(() => {
+    const fetchPatients = async () => {
+      try {
+        const patients = await getPatients(); // ✅ Fetch UMR count
+        setUmrCount(patients.length);
+      } catch (error) {
+        console.error("Error fetching patients:", error);
+      }
+    };
+    fetchPatients();
+  }, []);
   return (
     <div className="flex h-screen bg-gray-100">
       <Sidebar />
@@ -393,16 +431,17 @@ const Dashboard = () => {
             {[ 
               {
                 title: "UMR",
-                value: data.totalDoctors,
+                value: umrCount,
                 icon: <FaUser className="text-blue-800" />,
-                onClick: () => alert("Coming soon!"),
+                onClick: () => 
+                  {},
                 customClass: "bg-gradient-to-r from-blue-100 via-blue-200 to-blue-300 shadow-md hover:shadow-xl border border-blue-200",
               },
               {
                 title: "OP Bills",
                 value: 1441,
                 icon: <FaClipboardList className="text-red-800" />,
-                onClick: () => alert("Coming soon!"),
+                onClick: () => {},
                 customClass: "bg-gradient-to-r from-red-100 via-red-200 to-red-300 shadow-md hover:shadow-xl border border-red-200",
               },
               {
@@ -434,16 +473,16 @@ const Dashboard = () => {
               },
               {
                 title: "Discharges",
-                value: 31,
+                value: dischargesCount,
                 icon: <FaBed className="text-orange-800" />,
-                onClick: () => alert("Coming soon!"),
+                onClick: () => {},
                 customClass: "bg-gradient-to-r from-orange-100 via-orange-200 to-orange-300 shadow-md hover:shadow-xl border border-orange-200",
               },
               {
                 title: "On Bed Count",
                 value: onBedCount,
                 icon: <FaMoneyBill className="text-purple-800" />,
-                onClick: () => alert("Coming soon!"),
+                onClick: () => {},
                 customClass: "bg-gradient-to-r from-purple-100 via-purple-200 to-purple-300 shadow-md hover:shadow-xl border border-purple-200",
               }
             ].map((card, index) => (

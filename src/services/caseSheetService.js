@@ -1,5 +1,15 @@
 import api from "../utils/api"; // Import the common API instance
 
+export const getAllCaseSheetsWithDetails = async () => {
+  try {
+    const response = await api.get("/casesheets/fetchallcasesheetsinfo");
+    return response.data || [];
+  } catch (error) {
+    console.error("Frontend Error (case sheets):", error.response?.data || error.message);
+    throw new Error("Failed to fetch case sheets with details");
+  }
+};
+
 // Fetch Case Sheet by Patient ID
 export const getCaseSheet = async (patientId) => {
   const response = await api.get(`/casesheets/${patientId}`);
@@ -25,12 +35,4 @@ export const deleteCaseSheet = async (patientId) => {
 };
 
 
-export const getAllCaseSheetsWithDetails = async () => {
-  try {
-    const response = await api.get("/casesheets/fetchallcasesheetsinfo");
-    return response.data || [];
-  } catch (error) {
-    console.error("Frontend Error (case sheets):", error.response?.data || error.message);
-    throw new Error("Failed to fetch case sheets with details");
-  }
-};
+

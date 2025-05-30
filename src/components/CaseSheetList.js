@@ -639,8 +639,8 @@ const CaseSheetList = () => {
   {/* Details Grid */}
   <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
     <div className="space-y-1">
-      <p className="text-xs text-gray-500">Department</p>
-      <p className="font-medium">{departmentName}</p>
+      {/* <p className="text-xs text-gray-500">Department</p>
+      <p className="font-medium">{departmentName}</p> */}
     </div>
     <div className="space-y-1">
       <p className="text-xs text-gray-500">Diagnosis</p>

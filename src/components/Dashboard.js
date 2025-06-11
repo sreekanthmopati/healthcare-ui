@@ -293,13 +293,14 @@ import '../index.css';
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const location = useLocation();  // Track the current path
+  const location = useLocation();
   const [data, setData] = useState({ totalPatients: 0, totalDoctors: 0, totalAppointments: 0 });
   const [departmentCounts, setDepartmentCounts] = useState([]);
   const [onBedCount, setOnBedCount] = useState(0);
-  const [dischargesCount, setdischargesCount] = useState(0);
+  const [dischargesCount, setDischargesCount] = useState(0);
   const [umrCount, setUmrCount] = useState(0);
-
+  const [opCount, setOpCount] = useState(0);
+  const [ipCount, setIpCount] = useState(0);
 
   // Fetch dashboard data
   useEffect(() => {
@@ -324,7 +325,6 @@ const Dashboard = () => {
         console.error("Error fetching bed data:", error);
       }
     };
-  
     fetchBedData();
   }, []);
 
@@ -332,61 +332,33 @@ const Dashboard = () => {
     const fetchDischargeCount = async () => {
       try {
         const admissions = await getAllAdmissions();
-        
         const discharged = admissions.filter(
           admission =>
             admission.is_discharged === true &&
             admission.discharge_date !== null &&
             admission.dischargeReasonId !== null
         );
-  
-        setdischargesCount(discharged.length);
+        setDischargesCount(discharged.length);
       } catch (error) {
         console.error("Error fetching admission data:", error);
       }
     };
-  
     fetchDischargeCount();
   }, []);
-  
-  
 
-  // Fetch department counts
-  // useEffect(() => {
-  //   const getCounts = async () => {
-  //     try {
-  //       const counts = await fetchDepartmentCounts();
-
-  //       const countsToDisplay = [
-  //         { name: "General Medicine", count: counts.generalmed },
-  //         { name: "Dental", count: counts.dental },
-  //         { name: "ent", count: counts.ent },
-  //         { name: "Gynecology", count: counts.gynac },
-  //         { name: "Pulmonology", count: counts.pulma },
-  //         { name: "Pediatrics", count: counts.pediatrics },
-  //         { name: "Obstetrics", count: counts.obstetrics },
-  //         { name: "Ortho", count: counts.ortho }
-  //       ].filter(dept => dept.count > 0);
-
-  //       setDepartmentCounts(countsToDisplay);
-  //     } catch (error) {
-  //       console.error("Error fetching department counts:", error);
-  //     }
-  //   };
-  //   getCounts();
-  // }, []);
   useEffect(() => {
     const getCounts = async () => {
       try {
         const counts = await fetchDepartmentCounts();
-  
         const countsToDisplay = counts.map(dept => ({
           name: dept.departmentName,
           count: dept.admissionCount,
         }));
-       
-  
         setDepartmentCounts(countsToDisplay);
+        
+        // Calculate total IP count (sum of all department admissions)
+        const totalIpCount = countsToDisplay.reduce((sum, dept) => sum + dept.count, 0);
+        setIpCount(totalIpCount);
       } catch (error) {
         console.error("Error fetching department counts:", error);
       }
@@ -397,14 +369,19 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchPatients = async () => {
       try {
-        const patients = await getPatients(); // ✅ Fetch UMR count
+        const patients = await getPatients();
         setUmrCount(patients.length);
+        
+        // Calculate OP count (patients with Ptype === 'OP')
+        const opPatients = patients.filter(patient => patient.Ptype === 'OP');
+        setOpCount(opPatients.length);
       } catch (error) {
         console.error("Error fetching patients:", error);
       }
     };
     fetchPatients();
   }, []);
+
   return (
     <div className="flex h-screen bg-gray-100">
       <Sidebar />
@@ -433,13 +410,31 @@ const Dashboard = () => {
                 title: "UMR",
                 value: umrCount,
                 icon: <FaUser className="text-blue-800" />,
-                onClick: () => 
-                  {},
+                onClick: () => {},
                 customClass: "bg-gradient-to-r from-blue-100 via-blue-200 to-blue-300 shadow-md hover:shadow-xl border border-blue-200",
+                description: (
+                  <div className="text-sm mt-3">
+  <div className="flex justify-between items-center text-gray-700 font-medium">
+    <div className="flex items-center gap-1">
+      <span className="text-blue-700 font-semibold">IP:</span>
+      <span className="bg-blue-100 text-blue-800 text-xs font-bold px-2 py-0.5 rounded-full">
+        {ipCount}
+      </span>
+    </div>
+    <div className="flex items-center gap-1">
+      <span className="text-green-700 font-semibold">OP:</span>
+      <span className="bg-green-100 text-green-800 text-xs font-bold px-2 py-0.5 rounded-full">
+        {opCount}
+      </span>
+    </div>
+  </div>
+</div>
+
+                )
               },
               {
                 title: "OP Bills",
-                value: 1441,
+                value: opCount, // Changed to show OP count
                 icon: <FaClipboardList className="text-red-800" />,
                 onClick: () => {},
                 customClass: "bg-gradient-to-r from-red-100 via-red-200 to-red-300 shadow-md hover:shadow-xl border border-red-200",
@@ -448,8 +443,7 @@ const Dashboard = () => {
                 title: "IP Admissions",
                 value: (
                   <>
-                    {/* {data.totalPatients} */}
-                    {departmentCounts.reduce((sum, dept) => sum + dept.count, 0)}
+                    {ipCount}
                     <br />
                     <div className="max-h-40 overflow-y-auto custom-scrollbar mt-2 space-y-1">
                       {departmentCounts.map(({ name, count }) => (
@@ -498,6 +492,7 @@ const Dashboard = () => {
                   <div className="flex-1">
                     <p className="text-sm uppercase font-semibold tracking-wide">{card.title}</p>
                     <div className="text-lg font-bold mt-1">{card.value}</div>
+                    {card.description && card.description}
                   </div>
                 </div>
               </div>

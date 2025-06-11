@@ -454,15 +454,25 @@ const PatientDetails = () => {
     fetchPatient();
   }, [id]);
 
+  // const fetchCaseSheet = async () => {
+  //   try {
+  //     const data = await getCaseSheet(id);
+  //     setCaseSheet(data);
+  //     setIsPopupOpen(true);
+  //   } catch (error) {
+  //     console.error("Error fetching case sheet:", error);
+  //   }
+  // };
+
   const fetchCaseSheet = async () => {
     try {
-      const data = await getCaseSheet(id);
-      setCaseSheet(data);
       setIsPopupOpen(true);
     } catch (error) {
       console.error("Error fetching case sheet:", error);
     }
   };
+
+
 
   const handleDischargeClick = () => {
     setIsDischargeDropdownOpen(false);
@@ -638,7 +648,7 @@ const PatientDetails = () => {
             </div>
             <div className="p-5">
               <p className="text-gray-700">
-                {capitalizeFirstLetter(latestRecord.medication) || (
+                {capitalizeFirstLetter(latestRecord.Medication) || (
                   <span className="text-gray-400">No medication records available</span>
                 )}
               </p>
@@ -743,8 +753,8 @@ const PatientDetails = () => {
         )}
 
         {/* Case Sheet Popup */}
-        {isPopupOpen && caseSheet && (
-          <CaseSheetPopup caseSheet={caseSheet} onClose={() => setIsPopupOpen(false)} />
+        {isPopupOpen && latestRecord.CaseSheet && (
+          <CaseSheetPopup caseSheet={latestRecord.CaseSheet} onClose={() => setIsPopupOpen(false)} />
         )}
       </div>
     </div>

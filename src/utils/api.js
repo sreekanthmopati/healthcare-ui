@@ -3,8 +3,8 @@ import { toast } from "react-toastify";
 
 
 const api = axios.create({
-  // baseURL: "http://localhost:5000", // Your backend API base URL
-  baseURL: "https://zoey-backend-api-arbkbrgqeghga8c5.canadacentral-01.azurewebsites.net/",
+  baseURL: "http://localhost:5000", // Your backend API base URL
+  // baseURL: "https://zoey-backend-api-arbkbrgqeghga8c5.canadacentral-01.azurewebsites.net/",
 });
 
 // Add an interceptor for handling errors globally

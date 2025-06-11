@@ -342,8 +342,8 @@ const Inpatientconversion = () => {
   const fetchPatients = async () => {
     try {
       const data = await getPatients();
-      const opPatients = data.filter(patient => patient.Ptype === "OP");
-      setPatients(opPatients);
+      // const opPatients = data.filter(patient => patient.Ptype === "OP");
+      setPatients(data);
     } catch (error) {
       console.error(error.message);
       toast.error("Failed to fetch patients");

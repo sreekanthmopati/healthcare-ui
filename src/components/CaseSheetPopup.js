@@ -10,7 +10,7 @@ const CaseSheetPopup = ({ caseSheet, onClose }) => {
         {/* Case Sheet Content */}
         <div className="text-gray-700 bg-white p-4 rounded-lg shadow-md overflow-auto h-[70%]">
           {caseSheet ? (
-            <p className="whitespace-pre-wrap">{caseSheet.CaseSheet}</p>
+            <p className="whitespace-pre-wrap">{caseSheet}</p>
           ) : (
             <p className="text-gray-500 italic">No Case Sheet Available</p>
           )}

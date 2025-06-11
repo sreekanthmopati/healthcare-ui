@@ -751,6 +751,10 @@ const BulkAdmission = () => {
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
+  const [dateRange, setDateRange] = useState({
+    fromDate: '',
+    toDate: ''
+  });
   const fetchData = async () => {
     try {
       setLoading(true);
@@ -758,11 +762,12 @@ const BulkAdmission = () => {
       const [depts, wardsData, patientsCount] = await Promise.all([
         getDepartments(),
         getAllWards(),
-        getTodaysPatientsByDepartment()
+        getTodaysPatientsByDepartment(dateRange.fromDate, dateRange.toDate)
       ]);
 
       setDepartments(depts);
       setWards(wardsData);
+      console.log("fetched")
       setRegisteredCounts(patientsCount);
 
       const initialSelections = [];
@@ -1006,6 +1011,36 @@ const BulkAdmission = () => {
         </div>
 
         <div className="overflow-x-auto mb-6">
+
+        <div className="mb-4 flex space-x-4">
+  <div>
+    <label className="block text-sm font-medium">From Date</label>
+    <input
+      type="date"
+      className="border p-2 rounded"
+      value={dateRange.fromDate}
+      onChange={e => setDateRange(prev => ({ ...prev, fromDate: e.target.value }))}
+    />
+  </div>
+  <div>
+    <label className="block text-sm font-medium">To Date</label>
+    <input
+      type="date"
+      className="border p-2 rounded"
+      value={dateRange.toDate}
+      onChange={e => setDateRange(prev => ({ ...prev, toDate: e.target.value }))}
+    />
+  </div>
+  <button
+    type="button"
+    className="bg-blue-600 text-white px-4 py-2 rounded mt-auto"
+    onClick={fetchData}
+  >
+    Filter
+  </button>
+</div>
+
+
           <table className="min-w-full border text-sm text-center">
             <thead className="bg-teal-100 text-teal-800">
               <tr>

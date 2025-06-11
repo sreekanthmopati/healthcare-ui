@@ -37,13 +37,23 @@ export const createPatient = async (patientData) => {
 
 
 
-export const getTodaysPatientsByDepartment = async () => {
-  try {
-    const response = await api.get("/patients/todays-patient-counts");
-    return response.data || {};
-  } catch (error) {
-    console.error("Error fetching today's patients:", error);
-    throw error;
+// export const getTodaysPatientsByDepartment = async () => {
+//   try {
+//     const response = await api.get("/patients/todays-patient-counts");
+//     return response.data || {};
+//   } catch (error) {
+//     console.error("Error fetching today's patients:", error);
+//     throw error;
+//   }
+// };
+
+export const getTodaysPatientsByDepartment = async (fromDate, toDate) => {
+  let url = "/patients/todays-patient-counts";
+  if (fromDate && toDate) {
+    url += `?fromDate=${fromDate}&toDate=${toDate}`;
   }
+  const response = await api.get(url);
+  return response.data;
 };
+
 

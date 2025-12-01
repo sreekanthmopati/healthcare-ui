@@ -418,7 +418,7 @@ const ICDCodeManager = () => {
           </div>
 
           {/* Main Content */}
-          <div className="p-6">
+          <div className="p-3">
             {/* Search and Select Patient */}
             <div className="mb-8">
               <h2 className="text-lg font-semibold text-gray-700 mb-4">1. Select Patient</h2>

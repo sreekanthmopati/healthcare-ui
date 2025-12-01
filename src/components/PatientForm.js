@@ -991,21 +991,63 @@ const PatientForm = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-100">
-      <Sidebar />
-      <ToastContainer />
+   <div className="flex h-screen bg-gradient-to-br from-teal-50 via-blue-50 to-cyan-50">
+  <Sidebar />
+  <ToastContainer />
 
-      <div className="flex-1 p-6 overflow-y-auto bg-white shadow-lg rounded-lg">
-        <form onSubmit={handleSubmit} noValidate>
-          <div className="p-6 bg-white shadow-md rounded-md">
-            <h2 className="text-lg font-semibold text-center mb-4 text-teal-700">Patient Details</h2>
-            <div className="grid grid-cols-4 gap-4">
+  <div className="flex-1 p-6 overflow-y-auto">
+    <div className="max-w-6xl mx-auto">
+      <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
+        {/* Form Header */}
+        <div className="bg-gradient-to-r from-teal-500 to-cyan-600 py-5 px-8">
+          <h1 className="text-2xl font-bold text-white">Patient Registration</h1>
+          <p className="text-teal-100">Register new patients with complete information</p>
+        </div>
+
+        {/* Stepper Navigation */}
+        <div className="flex items-center justify-between px-8 py-6 border-b border-gray-200">
+          {[
+            { step: 1, label: "Patient Details", active: true },
+            { step: 2, label: "Address Details", active: false },
+            { step: 3, label: "Payment Details", active: false }
+          ].map((item, index) => (
+            <div key={item.step} className="flex items-center flex-1 last:flex-none">
+              <div className="flex flex-col items-center">
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-white 
+                  ${item.active ? 'bg-gradient-to-r from-teal-500 to-cyan-500 shadow-md' : 'bg-gray-300'}`}>
+                  {item.step}
+                </div>
+                <span className={`mt-2 text-sm font-medium ${item.active ? 'text-teal-700' : 'text-gray-500'}`}>
+                  {item.label}
+                </span>
+              </div>
+              {index < 2 && (
+                <div className="flex-1 h-1 mx-4 bg-gradient-to-r from-teal-200 to-cyan-200 rounded"></div>
+              )}
+            </div>
+          ))}
+        </div>
+
+        <form onSubmit={handleSubmit} noValidate className="p-8">
+          {/* Patient Details Section */}
+          <div className="mb-10">
+            <div className="flex items-center mb-6">
+              <div className="h-10 w-1 bg-gradient-to-b from-teal-500 to-cyan-500 mr-4 rounded-full"></div>
+              <h2 className="text-xl font-semibold text-gray-800">Patient Information</h2>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {/* Title */}
               <div className="flex flex-col">
-                <label className="font-medium">Title*</label>
+                <label className="font-medium text-gray-700 mb-2 flex items-center">
+                  Title
+                  <span className="text-red-500 ml-1">*</span>
+                </label>
                 <select
                   name="title"
-                  className={`border p-2 rounded ${shouldShowError('title') ? 'border-red-500' : ''}`}
+                  className={`border rounded-xl p-3 transition-all duration-200 focus:ring-2 focus:ring-teal-300 focus:border-teal-500 outline-none shadow-sm ${
+                    shouldShowError('title') ? 'border-red-500 ring-2 ring-red-100' : 'border-gray-300'
+                  }`}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   value={formData.title}
@@ -1017,30 +1059,51 @@ const PatientForm = () => {
                   <option value="Ms.">Ms.</option>
                   <option value="Dr.">Dr.</option>
                 </select>
-                {shouldShowError('title') && <span className="text-red-500 text-sm">{errors.title}</span>}
+                {shouldShowError('title') && (
+                  <span className="text-red-500 text-sm mt-2 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    {errors.title}
+                  </span>
+                )}
               </div>
 
+              {/* First Name */}
               <div className="flex flex-col">
-                <label className="font-medium">First Name*</label>
+                <label className="font-medium text-gray-700 mb-2 flex items-center">
+                  First Name
+                  <span className="text-red-500 ml-1">*</span>
+                </label>
                 <input
                   type="text"
                   name="firstName"
-                  className={`border p-2 rounded ${shouldShowError('firstName') ? 'border-red-500' : ''}`}
+                  className={`border rounded-xl p-3 transition-all duration-200 focus:ring-2 focus:ring-teal-300 focus:border-teal-500 outline-none shadow-sm ${
+                    shouldShowError('firstName') ? 'border-red-500 ring-2 ring-red-100' : 'border-gray-300'
+                  }`}
                   placeholder="Enter First Name"
                   onChange={handleChange}
                   onBlur={handleBlur}
                   value={formData.firstName}
                   required
                 />
-                {shouldShowError('firstName') && <span className="text-red-500 text-sm">{errors.firstName}</span>}
+                {shouldShowError('firstName') && (
+                  <span className="text-red-500 text-sm mt-2 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    {errors.firstName}
+                  </span>
+                )}
               </div>
 
+              {/* Middle Name */}
               <div className="flex flex-col">
-                <label className="font-medium">Middle Name</label>
+                <label className="font-medium text-gray-700 mb-2">Middle Name</label>
                 <input
                   type="text"
                   name="middleName"
-                  className="border p-2 rounded"
+                  className="border border-gray-300 rounded-xl p-3 transition-all duration-200 focus:ring-2 focus:ring-teal-300 focus:border-teal-500 outline-none shadow-sm"
                   placeholder="Enter Middle Name"
                   onChange={handleChange}
                   onBlur={handleBlur}
@@ -1048,12 +1111,13 @@ const PatientForm = () => {
                 />
               </div>
 
+              {/* Surname */}
               <div className="flex flex-col">
-                <label className="font-medium">Surname</label>
+                <label className="font-medium text-gray-700 mb-2">Surname</label>
                 <input
                   type="text"
                   name="surname"
-                  className="border p-2 rounded"
+                  className="border border-gray-300 rounded-xl p-3 transition-all duration-200 focus:ring-2 focus:ring-teal-300 focus:border-teal-500 outline-none shadow-sm"
                   placeholder="Enter Surname"
                   onChange={handleChange}
                   onBlur={handleBlur}
@@ -1061,11 +1125,17 @@ const PatientForm = () => {
                 />
               </div>
 
+              {/* Gender */}
               <div className="flex flex-col">
-                <label className="font-medium">Gender*</label>
+                <label className="font-medium text-gray-700 mb-2 flex items-center">
+                  Gender
+                  <span className="text-red-500 ml-1">*</span>
+                </label>
                 <select
                   name="gender"
-                  className={`border p-2 rounded ${shouldShowError('gender') ? 'border-red-500' : ''}`}
+                  className={`border rounded-xl p-3 transition-all duration-200 focus:ring-2 focus:ring-teal-300 focus:border-teal-500 outline-none shadow-sm ${
+                    shouldShowError('gender') ? 'border-red-500 ring-2 ring-red-100' : 'border-gray-300'
+                  }`}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   value={formData.gender}
@@ -1076,16 +1146,29 @@ const PatientForm = () => {
                   <option value="Female">Female</option>
                   <option value="Other">Other</option>
                 </select>
-                {shouldShowError('gender') && <span className="text-red-500 text-sm">{errors.gender}</span>}
+                {shouldShowError('gender') && (
+                  <span className="text-red-500 text-sm mt-2 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    {errors.gender}
+                  </span>
+                )}
               </div>
 
-              <div className="flex flex-col col-span-2">
-                <label className="font-medium">Date of Birth (DD-MM-YYYY)</label>
-                <div className="flex gap-2">
+              {/* Date of Birth */}
+              <div className="flex flex-col lg:col-span-2">
+                <label className="font-medium text-gray-700 mb-2">
+                  Date of Birth (DD-MM-YYYY)
+                  <span className="text-red-500 ml-1">*</span>
+                </label>
+                <div className="flex gap-3">
                   <input
                     type="text"
                     name="dob.day"
-                    className={`border p-2 w-1/3 rounded ${shouldShowDobError('day') ? 'border-red-500' : ''}`}
+                    className={`border rounded-xl p-3 w-1/3 transition-all duration-200 focus:ring-2 focus:ring-teal-300 focus:border-teal-500 outline-none shadow-sm ${
+                      shouldShowDobError('day') ? 'border-red-500 ring-2 ring-red-100' : 'border-gray-300'
+                    }`}
                     placeholder="DD"
                     onChange={handleChange}
                     onBlur={handleBlur}
@@ -1095,7 +1178,9 @@ const PatientForm = () => {
                   <input
                     type="text"
                     name="dob.month"
-                    className={`border p-2 w-1/3 rounded ${shouldShowDobError('month') ? 'border-red-500' : ''}`}
+                    className={`border rounded-xl p-3 w-1/3 transition-all duration-200 focus:ring-2 focus:ring-teal-300 focus:border-teal-500 outline-none shadow-sm ${
+                      shouldShowDobError('month') ? 'border-red-500 ring-2 ring-red-100' : 'border-gray-300'
+                    }`}
                     placeholder="MM"
                     onChange={handleChange}
                     onBlur={handleBlur}
@@ -1105,7 +1190,9 @@ const PatientForm = () => {
                   <input
                     type="text"
                     name="dob.year"
-                    className={`border p-2 w-1/3 rounded ${shouldShowDobError('year') ? 'border-red-500' : ''}`}
+                    className={`border rounded-xl p-3 w-1/3 transition-all duration-200 focus:ring-2 focus:ring-teal-300 focus:border-teal-500 outline-none shadow-sm ${
+                      shouldShowDobError('year') ? 'border-red-500 ring-2 ring-red-100' : 'border-gray-300'
+                    }`}
                     placeholder="YYYY"
                     onChange={handleChange}
                     onBlur={handleBlur}
@@ -1114,20 +1201,31 @@ const PatientForm = () => {
                   />
                 </div>
                 {(shouldShowDobError('day') || shouldShowDobError('month') || shouldShowDobError('year')) && (
-                  <span className="text-red-500 text-sm">
+                  <span className="text-red-500 text-sm mt-2 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
                     {errors['dob.day'] || errors['dob.month'] || errors['dob.year']}
                   </span>
                 )}
-                {errors.dob && <span className="text-red-500 text-sm">{errors.dob}</span>}
+                {errors.dob && (
+                  <span className="text-red-500 text-sm mt-2 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    {errors.dob}
+                  </span>
+                )}
               </div>
 
-              <div className="flex flex-col col-span-2">
-                <label className="font-medium">Age (Years - Months - Days)</label>
-                <div className="flex gap-2">
+              {/* Age Display */}
+              <div className="flex flex-col lg:col-span-2">
+                <label className="font-medium text-gray-700 mb-2">Age (Years - Months - Days)</label>
+                <div className="flex gap-3">
                   <input
                     type="text"
                     name="age.years"
-                    className="border p-2 w-1/3 rounded bg-gray-100"
+                    className="border border-gray-300 rounded-xl p-3 w-1/3 bg-gray-50 text-gray-600 shadow-sm"
                     placeholder="Years"
                     value={formData.age.years}
                     readOnly
@@ -1135,7 +1233,7 @@ const PatientForm = () => {
                   <input
                     type="text"
                     name="age.months"
-                    className="border p-2 w-1/3 rounded bg-gray-100"
+                    className="border border-gray-300 rounded-xl p-3 w-1/3 bg-gray-50 text-gray-600 shadow-sm"
                     placeholder="Months"
                     value={formData.age.months}
                     readOnly
@@ -1143,7 +1241,7 @@ const PatientForm = () => {
                   <input
                     type="text"
                     name="age.days"
-                    className="border p-2 w-1/3 rounded bg-gray-100"
+                    className="border border-gray-300 rounded-xl p-3 w-1/3 bg-gray-50 text-gray-600 shadow-sm"
                     placeholder="Days"
                     value={formData.age.days}
                     readOnly
@@ -1151,11 +1249,12 @@ const PatientForm = () => {
                 </div>
               </div>
 
+              {/* Blood Group */}
               <div className="flex flex-col">
-                <label className="font-medium">Blood Group</label>
+                <label className="font-medium text-gray-700 mb-2">Blood Group</label>
                 <select
                   name="bloodGroup"
-                  className="border p-2 rounded"
+                  className="border border-gray-300 rounded-xl p-3 transition-all duration-200 focus:ring-2 focus:ring-teal-300 focus:border-teal-500 outline-none shadow-sm"
                   onChange={handleChange}
                   onBlur={handleBlur}
                   value={formData.bloodGroup}
@@ -1172,12 +1271,18 @@ const PatientForm = () => {
                 </select>
               </div>
 
+              {/* Contact Number */}
               <div className="flex flex-col">
-                <label className="font-medium">Contact Number*</label>
+                <label className="font-medium text-gray-700 mb-2 flex items-center">
+                  Contact Number
+                  <span className="text-red-500 ml-1">*</span>
+                </label>
                 <input
                   type="text"
                   name="contactNumber"
-                  className={`border p-2 rounded ${shouldShowError('contactNumber') ? 'border-red-500' : ''}`}
+                  className={`border rounded-xl p-3 transition-all duration-200 focus:ring-2 focus:ring-teal-300 focus:border-teal-500 outline-none shadow-sm ${
+                    shouldShowError('contactNumber') ? 'border-red-500 ring-2 ring-red-100' : 'border-gray-300'
+                  }`}
                   placeholder="Enter Mobile Number"
                   onChange={handleChange}
                   onBlur={handleBlur}
@@ -1185,138 +1290,231 @@ const PatientForm = () => {
                   maxLength={10}
                   required
                 />
-                {shouldShowError('contactNumber') && <span className="text-red-500 text-sm">{errors.contactNumber}</span>}
+                {shouldShowError('contactNumber') && (
+                  <span className="text-red-500 text-sm mt-2 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    {errors.contactNumber}
+                  </span>
+                )}
               </div>
 
+              {/* Email */}
               <div className="flex flex-col">
-                <label className="font-medium">Email</label>
+                <label className="font-medium text-gray-700 mb-2">Email</label>
                 <input
                   type="email"
                   name="email"
-                  className={`border p-2 rounded ${shouldShowError('email') ? 'border-red-500' : ''}`}
+                  className={`border rounded-xl p-3 transition-all duration-200 focus:ring-2 focus:ring-teal-300 focus:border-teal-500 outline-none shadow-sm ${
+                    shouldShowError('email') ? 'border-red-500 ring-2 ring-red-100' : 'border-gray-300'
+                  }`}
                   placeholder="Enter Email ID"
                   onChange={handleChange}
                   onBlur={handleBlur}
                   value={formData.email}
                 />
-                {shouldShowError('email') && <span className="text-red-500 text-sm">{errors.email}</span>}
+                {shouldShowError('email') && (
+                  <span className="text-red-500 text-sm mt-2 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    {errors.email}
+                  </span>
+                )}
               </div>
 
+              {/* Alternate Number */}
               <div className="flex flex-col">
-                <label className="font-medium">Alternate Number</label>
+                <label className="font-medium text-gray-700 mb-2">Alternate Number</label>
                 <input
                   type="text"
                   name="alternateNumber"
-                  className={`border p-2 rounded ${shouldShowError('alternateNumber') ? 'border-red-500' : ''}`}
+                  className={`border rounded-xl p-3 transition-all duration-200 focus:ring-2 focus:ring-teal-300 focus:border-teal-500 outline-none shadow-sm ${
+                    shouldShowError('alternateNumber') ? 'border-red-500 ring-2 ring-red-100' : 'border-gray-300'
+                  }`}
                   placeholder="Enter Mobile Number"
                   onChange={handleChange}
                   onBlur={handleBlur}
                   value={formData.alternateNumber}
                   maxLength={10}
                 />
-                {shouldShowError('alternateNumber') && <span className="text-red-500 text-sm">{errors.alternateNumber}</span>}
+                {shouldShowError('alternateNumber') && (
+                  <span className="text-red-500 text-sm mt-2 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    {errors.alternateNumber}
+                  </span>
+                )}
               </div>
 
+              {/* Department */}
               <div className="flex flex-col">
-  <label className="font-medium mb-2">Department*</label>
-  <select
-    name="departmentId"
-    value={formData.departmentId}
-    onChange={handleDepartmentChange}
-    className="border-2 border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-    required
-  >
-    <option value="">Select Department</option>
-    {departments.map(department => (
-      <option key={department.DepartmentID} value={department.DepartmentID}>
-        {department.DepartmentName}
-      </option>
-    ))}
-  </select>
-  {shouldShowError("departmentId") && (
-    <span className="text-red-500 text-sm mt-1">{errors.departmentId}</span>
-  )}
-</div>
+                <label className="font-medium text-gray-700 mb-2 flex items-center">
+                  Department
+                  <span className="text-red-500 ml-1">*</span>
+                </label>
+                <select
+                  name="departmentId"
+                  value={formData.departmentId}
+                  onChange={handleDepartmentChange}
+                  className={`border rounded-xl p-3 transition-all duration-200 focus:ring-2 focus:ring-teal-300 focus:border-teal-500 outline-none shadow-sm ${
+                    shouldShowError('departmentId') ? 'border-red-500 ring-2 ring-red-100' : 'border-gray-300'
+                  }`}
+                  required
+                >
+                  <option value="">Select Department</option>
+                  {departments.map(department => (
+                    <option key={department.DepartmentID} value={department.DepartmentID}>
+                      {department.DepartmentName}
+                    </option>
+                  ))}
+                </select>
+                {shouldShowError("departmentId") && (
+                  <span className="text-red-500 text-sm mt-2 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    {errors.departmentId}
+                  </span>
+                )}
+              </div>
 
-
+              {/* IP/OP */}
               <div className="flex flex-col">
-                <label className="font-medium">IP/OP</label>
+                <label className="font-medium text-gray-700 mb-2">IP/OP</label>
                 <input
                   type="text"
                   name="patientType"
                   value={formData.patientType}
                   readOnly
-                  className="border p-2 rounded bg-gray-200 text-blue-700 font-semibold cursor-not-allowed"
+                  className="border border-gray-300 rounded-xl p-3 bg-gray-100 text-teal-700 font-semibold shadow-sm"
                 />
               </div>
             </div>
+          </div>
 
-            <h2 className="text-lg font-semibold text-center mt-6 mb-4 text-teal-700">Address Details</h2>
-            <div className="grid grid-cols-4 gap-4">
+          {/* Address Details Section */}
+          <div className="mb-10">
+            <div className="flex items-center mb-6">
+              <div className="h-10 w-1 bg-gradient-to-b from-teal-500 to-cyan-500 mr-4 rounded-full"></div>
+              <h2 className="text-xl font-semibold text-gray-800">Address Details</h2>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <div className="flex flex-col">
-                <label className="font-medium">Village*</label>
+                <label className="font-medium text-gray-700 mb-2 flex items-center">
+                  Village
+                  <span className="text-red-500 ml-1">*</span>
+                </label>
                 <input
                   type="text"
                   name="village"
-                  className={`border p-2 rounded ${shouldShowError('village') ? 'border-red-500' : ''}`}
+                  className={`border rounded-xl p-3 transition-all duration-200 focus:ring-2 focus:ring-teal-300 focus:border-teal-500 outline-none shadow-sm ${
+                    shouldShowError('village') ? 'border-red-500 ring-2 ring-red-100' : 'border-gray-300'
+                  }`}
                   placeholder="Enter Village"
                   onChange={handleChange}
                   onBlur={handleBlur}
                   value={formData.village}
                   required
                 />
-                {shouldShowError('village') && <span className="text-red-500 text-sm">{errors.village}</span>}
+                {shouldShowError('village') && (
+                  <span className="text-red-500 text-sm mt-2 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    {errors.village}
+                  </span>
+                )}
               </div>
 
               <div className="flex flex-col">
-                <label className="font-medium">Mandal*</label>
+                <label className="font-medium text-gray-700 mb-2 flex items-center">
+                  Mandal
+                  <span className="text-red-500 ml-1">*</span>
+                </label>
                 <input
                   type="text"
                   name="mandal"
-                  className={`border p-2 rounded ${shouldShowError('mandal') ? 'border-red-500' : ''}`}
+                  className={`border rounded-xl p-3 transition-all duration-200 focus:ring-2 focus:ring-teal-300 focus:border-teal-500 outline-none shadow-sm ${
+                    shouldShowError('mandal') ? 'border-red-500 ring-2 ring-red-100' : 'border-gray-300'
+                  }`}
                   placeholder="Enter Mandal"
                   onChange={handleChange}
                   onBlur={handleBlur}
                   value={formData.mandal}
                   required
                 />
-                {shouldShowError('mandal') && <span className="text-red-500 text-sm">{errors.mandal}</span>}
+                {shouldShowError('mandal') && (
+                  <span className="text-red-500 text-sm mt-2 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    {errors.mandal}
+                  </span>
+                )}
               </div>
 
               <div className="flex flex-col">
-                <label className="font-medium">District*</label>
+                <label className="font-medium text-gray-700 mb-2 flex items-center">
+                  District
+                  <span className="text-red-500 ml-1">*</span>
+                </label>
                 <input
                   type="text"
                   name="district"
-                  className={`border p-2 rounded ${shouldShowError('district') ? 'border-red-500' : ''}`}
+                  className={`border rounded-xl p-3 transition-all duration-200 focus:ring-2 focus:ring-teal-300 focus:border-teal-500 outline-none shadow-sm ${
+                    shouldShowError('district') ? 'border-red-500 ring-2 ring-red-100' : 'border-gray-300'
+                  }`}
                   placeholder="Enter District"
                   onChange={handleChange}
                   onBlur={handleBlur}
                   value={formData.district}
                   required
                 />
-                {shouldShowError('district') && <span className="text-red-500 text-sm">{errors.district}</span>}
+                {shouldShowError('district') && (
+                  <span className="text-red-500 text-sm mt-2 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    {errors.district}
+                  </span>
+                )}
               </div>
 
               <div className="flex flex-col">
-                <label className="font-medium">State</label>
+                <label className="font-medium text-gray-700 mb-2">State</label>
                 <input
                   type="text"
                   name="state"
                   value={formData.state}
-                  className="border p-2 rounded"
+                  className="border border-gray-300 rounded-xl p-3 bg-gray-50 shadow-sm"
                   readOnly
                 />
               </div>
             </div>
+          </div>
 
-            <h2 className="text-lg font-semibold text-center mt-6 mb-4 text-teal-700">Other Details</h2>
-            <div className="grid grid-cols-4 gap-4">
+          {/* Other Details Section */}
+          <div className="mb-10">
+            <div className="flex items-center mb-6">
+              <div className="h-10 w-1 bg-gradient-to-b from-teal-500 to-cyan-500 mr-4 rounded-full"></div>
+              <h2 className="text-xl font-semibold text-gray-800">Other Details</h2>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <div className="flex flex-col">
-                <label className="font-medium">Payment Type*</label>
+                <label className="font-medium text-gray-700 mb-2 flex items-center">
+                  Payment Type
+                  <span className="text-red-500 ml-1">*</span>
+                </label>
                 <select
                   name="paymentType"
-                  className={`border p-2 rounded ${shouldShowError('paymentType') ? 'border-red-500' : ''}`}
+                  className={`border rounded-xl p-3 transition-all duration-200 focus:ring-2 focus:ring-teal-300 focus:border-teal-500 outline-none shadow-sm ${
+                    shouldShowError('paymentType') ? 'border-red-500 ring-2 ring-red-100' : 'border-gray-300'
+                  }`}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   value={formData.paymentType}
@@ -1327,47 +1525,54 @@ const PatientForm = () => {
                   <option value="Card">Card</option>
                   <option value="UPI">UPI</option>
                 </select>
-                {shouldShowError('paymentType') && <span className="text-red-500 text-sm">{errors.paymentType}</span>}
+                {shouldShowError('paymentType') && (
+                  <span className="text-red-500 text-sm mt-2 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    {errors.paymentType}
+                  </span>
+                )}
               </div>
 
               <div className="flex flex-col">
-                <label className="font-medium">Reg. Amount</label>
+                <label className="font-medium text-gray-700 mb-2">Reg. Amount</label>
                 <input
                   type="text"
                   name="regAmount"
-                  className="border p-2 rounded bg-gray-200"
+                  className="border border-gray-300 rounded-xl p-3 bg-gray-50 shadow-sm"
                   value={formData.regAmount}
                   readOnly
                 />
               </div>
 
               <div className="flex flex-col">
-                <label className="font-medium">Discount (%)</label>
+                <label className="font-medium text-gray-700 mb-2">Discount (%)</label>
                 <input
                   type="text"
                   name="discount"
-                  className="border p-2 rounded bg-gray-200"
+                  className="border border-gray-300 rounded-xl p-3 bg-gray-50 shadow-sm"
                   value={formData.discount}
                   readOnly
                 />
               </div>
 
               <div className="flex flex-col">
-                <label className="font-medium">Total Amount</label>
+                <label className="font-medium text-gray-700 mb-2">Total Amount</label>
                 <input
                   type="text"
                   name="totalAmount"
-                  className="border p-2 rounded bg-gray-200"
+                  className="border border-gray-300 rounded-xl p-3 bg-gray-50 shadow-sm"
                   value={formData.totalAmount}
                   readOnly
                 />
               </div>
 
               <div className="flex flex-col">
-                <label className="font-medium">Referral Category</label>
+                <label className="font-medium text-gray-700 mb-2">Referral Category</label>
                 <select
                   name="referralCategory"
-                  className="border p-2 rounded"
+                  className="border border-gray-300 rounded-xl p-3 transition-all duration-200 focus:ring-2 focus:ring-teal-300 focus:border-teal-500 outline-none shadow-sm"
                   onChange={handleChange}
                   onBlur={handleBlur}
                   value={formData.referralCategory}
@@ -1378,12 +1583,12 @@ const PatientForm = () => {
                 </select>
               </div>
 
-              <div className="flex flex-col col-span-2">
-                <label className="font-medium">Remarks</label>
+              <div className="flex flex-col lg:col-span-2">
+                <label className="font-medium text-gray-700 mb-2">Remarks</label>
                 <input
                   type="text"
                   name="remarks"
-                  className="border p-2 rounded"
+                  className="border border-gray-300 rounded-xl p-3 transition-all duration-200 focus:ring-2 focus:ring-teal-300 focus:border-teal-500 outline-none shadow-sm"
                   placeholder="Enter Remarks"
                   onChange={handleChange}
                   onBlur={handleBlur}
@@ -1391,23 +1596,32 @@ const PatientForm = () => {
                 />
               </div>
             </div>
+          </div>
 
-            <div className="flex justify-end mt-4">
-              <button
-                type="submit"
-                className="bg-blue-600 text-white font-medium px-6 py-2 rounded hover:bg-blue-700 transition-colors"
-              >
-                Submit
-              </button>
-            </div>
+          {/* Submit Button */}
+          <div className="flex justify-end mt-8">
+            <button
+              type="submit"
+              className="bg-gradient-to-r from-teal-500 to-cyan-600 text-white font-semibold px-8 py-3 rounded-xl shadow-md hover:from-teal-600 hover:to-cyan-700 transition-all duration-300 transform hover:-translate-y-0.5 focus:ring-2 focus:ring-teal-300 focus:ring-opacity-50 focus:outline-none flex items-center"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              Register Patient
+            </button>
           </div>
         </form>
       </div>
     </div>
+  </div>
+</div>
   );
 };
 
 export default PatientForm;
+
+
+
 
 
 

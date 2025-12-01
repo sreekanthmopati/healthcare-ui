@@ -7,12 +7,12 @@ const CaseSheetListPage = () => {
  
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex h-screen bg-white">
       {/* Sidebar */}
       <Sidebar/>
 
       {/* Main Content */}
-      <div className="flex-1 p-8 overflow-auto">
+      <div className="flex-1 overflow-auto">
       <CaseSheetList/>
       </div>
     </div>

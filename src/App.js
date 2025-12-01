@@ -15,7 +15,7 @@ import ICDcodepage from "./components/ICDcodepage";
 
 function App() {
   return (
-    <>
+    <div className="bg-white">
     <ToastContainer position="top-right" autoClose={1000} />
       <Router>
         <Routes>
@@ -36,7 +36,7 @@ function App() {
 
         </Routes>
       </Router>
-    </>
+    </div>
   );
 }
 

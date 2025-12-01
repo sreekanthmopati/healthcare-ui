@@ -441,11 +441,7 @@ const CaseSheetList = () => {
             filteredRecords.map((record) => (
               <div
                 key={record.RecordID}
-                className={`border rounded-xl p-5 shadow-sm hover:shadow-md transition-all duration-200 ${
-                  record.Patients?.Ptype === 'IP' 
-                    ? 'bg-gradient-to-r from-blue-50 to-blue-100 border-blue-200' 
-                    : 'bg-gradient-to-r from-green-50 to-green-100 border-green-200'
-                }`}
+                className={'border rounded-xl p-5 shadow-sm hover:shadow-md transition-all duration-200 bg-white'}
               >
                 <div className="flex flex-col md:flex-row justify-between">
                   {/* Patient Info */}
@@ -582,6 +578,8 @@ const CaseSheetList = () => {
 };
 
 export default CaseSheetList;
+
+
 
 
 

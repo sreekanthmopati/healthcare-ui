@@ -1177,6 +1177,9 @@ const BulkAdmission = () => {
         </div>
       )}
     </div>
+
+
+
   );
 };
 

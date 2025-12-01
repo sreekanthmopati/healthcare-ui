@@ -12,7 +12,7 @@ const Adminreportpage = () => {
       <Sidebar/>
 
       {/* Main Content */}
-      <div className="flex-1 p-8 overflow-auto">
+      <div className="flex-1  overflow-auto">
       <Report/>
       </div>
     </div>

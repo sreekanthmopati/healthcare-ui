@@ -2,7 +2,8 @@ import React from "react";
 
 const CaseSheetPopup = ({ caseSheet, onClose }) => {
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm p-4">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm p-4">
+
       <div className="bg-gradient-to-br from-gray-100 to-gray-200 p-6 rounded-2xl shadow-2xl w-[75%] max-w-[900px] h-[60vh] overflow-y-auto border border-gray-300">
         {/* Title */}
         <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">Patient Case Sheet</h2>

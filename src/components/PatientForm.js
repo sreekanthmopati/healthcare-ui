@@ -654,10 +654,10 @@
 
 
 import React, { useState, useEffect } from "react";
-import Sidebar from '../components/Sidebar';
 import { createPatient } from '../services/patientService';
 import { ToastContainer, toast } from 'react-toastify';
 import { getDepartments } from "../services/departmentService";
+import { getPatientsByMobile } from "../services/patientService";
 import 'react-toastify/dist/ReactToastify.css';
 
 const PatientForm = () => {
@@ -696,6 +696,10 @@ const PatientForm = () => {
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
   const [submitAttempted, setSubmitAttempted] = useState(false);
+const [mobileSuggestions, setMobileSuggestions] = useState([]);
+const [selectedExistingPatient, setSelectedExistingPatient] = useState(null);
+const [isSelectingSuggestion, setIsSelectingSuggestion] = useState(false);
+
 
   useEffect(() => {
     const fetchDepartments = async () => {
@@ -812,6 +816,8 @@ const PatientForm = () => {
   };
 
   const handleBlur = (e) => {
+      if (isSelectingSuggestion) return; // ⛔ stop validation on click
+
     const { name } = e.target;
     setTouched(prev => ({ ...prev, [name]: true }));
   };
@@ -819,6 +825,18 @@ const PatientForm = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
+
+    if (name === "contactNumber") {
+  setFormData(prev => ({ ...prev, contactNumber: value }));
+  setSelectedExistingPatient(null);
+
+  if (value.length >= 3) {
+    getPatientsByMobile(value).then(setMobileSuggestions);
+  } else {
+    setMobileSuggestions([]);
+  }
+  return;
+}
     // Handling nested dob and age
     if (name.startsWith("dob.")) {
       const dobField = name.split(".")[1];
@@ -990,9 +1008,36 @@ const PatientForm = () => {
     return (submitAttempted || touched[fullName]) && errors[fullName];
   };
 
+
+  const handleSelectExistingPatient = (patient) => {
+  setIsSelectingSuggestion(true);
+
+  // ✅ Update mobile number explicitly
+  setFormData(prev => ({
+    ...prev,
+    contactNumber: patient.ContactNumber
+  }));
+
+  // ✅ Mark as existing
+  setSelectedExistingPatient(patient);
+ toast.info(
+    "Similar patient found. Continue only if this is a new registration.",
+    { autoClose: 3000 }
+  );
+  // ✅ Clear dropdown
+  setMobileSuggestions([]);
+
+  // Delay reset to avoid blur race condition
+  setTimeout(() => {
+    setIsSelectingSuggestion(false);
+  }, 100);
+};
+
+
+
   return (
    <div className="flex h-screen bg-gradient-to-br from-teal-50 via-blue-50 to-cyan-50">
-  <Sidebar />
+  {/* <Sidebar /> */}
   <ToastContainer />
 
   <div className="flex-1 p-6 overflow-y-auto">
@@ -1272,7 +1317,7 @@ const PatientForm = () => {
               </div>
 
               {/* Contact Number */}
-              <div className="flex flex-col">
+              {/* <div className="flex flex-col">
                 <label className="font-medium text-gray-700 mb-2 flex items-center">
                   Contact Number
                   <span className="text-red-500 ml-1">*</span>
@@ -1298,7 +1343,60 @@ const PatientForm = () => {
                     {errors.contactNumber}
                   </span>
                 )}
-              </div>
+              </div> */}
+
+<div className="flex flex-col relative">
+  <label className="font-medium text-gray-700 mb-2 flex items-center">
+    Contact Number
+    <span className="text-red-500 ml-1">*</span>
+  </label>
+
+  <input
+    type="text"
+    name="contactNumber"
+    value={formData.contactNumber}
+    onChange={handleChange}
+    onBlur={handleBlur}
+    maxLength={10}
+    autoComplete="off"
+    className={`border rounded-xl p-3 transition-all duration-200 focus:ring-2 focus:ring-teal-300 ${
+      shouldShowError("contactNumber")
+        ? "border-red-500 ring-red-100"
+        : "border-gray-300"
+    }`}
+    placeholder="Enter Mobile Number"
+  />
+
+  {/* Suggestions */}
+  {mobileSuggestions.length > 0 && (
+    <div className="absolute z-20 top-full mt-1 w-full bg-white border rounded-xl shadow-lg max-h-48 overflow-y-auto">
+      {mobileSuggestions.map((p) => (
+        <div
+          key={p.PatientID}
+          onMouseDown={() => handleSelectExistingPatient(p)} // ✅ FIX
+          className="px-4 py-2 hover:bg-teal-50 cursor-pointer text-sm"
+        >
+          <div className="font-semibold">{p.Name}</div>
+          <div className="font-semibold">{p.ContactNumber}</div>
+          <div className="text-xs text-gray-500">
+            {p.Gender} | {p.Age}
+          </div>
+        </div>
+      ))}
+    </div>
+  )}
+
+  {/* Warning */}
+  {selectedExistingPatient && (
+    <div className="mt-3 text-sm text-amber-800 bg-amber-50 px-3 py-2 rounded-lg border border-amber-200">
+      ⚠ A patient already exists with this mobile number.
+      <br />
+      Proceed only if this is a <b>new patient registration</b>.
+    </div>
+  )}
+</div>
+
+
 
               {/* Email */}
               <div className="flex flex-col">

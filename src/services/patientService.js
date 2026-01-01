@@ -57,3 +57,32 @@ export const getTodaysPatientsByDepartment = async (fromDate, toDate) => {
 };
 
 
+
+export const getPatientsByMobile = async (mobile) => {
+  console.log("🟡 [FRONTEND] getPatientsByMobile called with:", mobile);
+
+  if (!mobile || mobile.length < 3) {
+    console.log("🟢 [FRONTEND] mobile < 3 → skipping API");
+    return [];
+  }
+
+  try {
+    const response = await api.get("/patients/mobile", {
+      params: { mobile },
+    });
+
+    console.log(    
+      "🟢 [FRONTEND] API success:",
+      response.data
+    );
+
+    return response.data || [];
+  } catch (error) {
+    console.error("🔴 [FRONTEND] API ERROR:", error);
+    throw error;
+  }
+};
+
+
+
+

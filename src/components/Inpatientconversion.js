@@ -761,7 +761,7 @@ const Inpatientconversion = () => {
 
   return (
     <div className="flex h-screen bg-gray-100">
-      <Sidebar />
+      
       <ToastContainer position="top-center" autoClose={5000} />
 
       <div className="flex-1 p-6 overflow-y-auto bg-white shadow-lg rounded-lg">

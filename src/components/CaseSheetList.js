@@ -314,13 +314,11 @@ import CaseSheetPopup from './CaseSheetPopup';
 import { 
   FaSearch, 
   FaUserInjured, 
-  FaProcedures, 
-  FaNotesMedical, 
+  FaProcedures,  
   FaFileMedical, 
   FaHospitalUser,
   FaPhone,
   FaIdCard,
-  FaCalendarAlt,
   FaStethoscope,
   FaPills,
   FaClinicMedical
